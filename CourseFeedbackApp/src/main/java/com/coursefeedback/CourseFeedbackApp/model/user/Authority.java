@@ -17,17 +17,17 @@ public class Authority implements GrantedAuthority {
     @Id
     private Integer id;
     @Column
-    private AuthorityTypes authorityType;
-    @OneToMany
+    private String authority;
+    @OneToMany(fetch = FetchType.EAGER)
     private List<User> users;
 
 
     public Authority(String authorityType, Integer id) {
-        this.authorityType = AuthorityTypes.valueOf(authorityType);
+        this.authority = authorityType;
         this.id = id;
     }
 
     public String getAuthority() {
-        return authorityType.toString();
+        return authority;
     }
 }

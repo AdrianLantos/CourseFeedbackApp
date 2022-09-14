@@ -2,7 +2,7 @@ package com.coursefeedback.CourseFeedbackApp.service;
 
 import com.coursefeedback.CourseFeedbackApp.model.course.Course;
 import com.coursefeedback.CourseFeedbackApp.model.feedback.Feedback;
-import com.coursefeedback.CourseFeedbackApp.model.user.AuthorityTypes;
+import com.coursefeedback.CourseFeedbackApp.model.user.Authority;
 import com.coursefeedback.CourseFeedbackApp.model.user.User;
 import com.coursefeedback.CourseFeedbackApp.service.AuthorityService.AuthorityMemoryProvider;
 import com.coursefeedback.CourseFeedbackApp.service.AuthorityService.AuthorityRepository;
@@ -40,6 +40,17 @@ public class Service {
         userRepository.saveAll(memoryProvider.getUsers());
         courseRepository.saveAll(courseMemoryProvider.getCourses());
         authorityRepository.saveAll(authorityMemoryProvider.getAuthorityList());
+        createAdmin();
+    }
+
+    public void createAdmin() {
+        User admin = new User("admin", "admin", "admin");
+        admin.setAuthority(authorityRepository.findById(1).get());
+        authorityRepository.findById(1).orElseThrow(() -> new RuntimeException("WRONG AUTHORITY")).getUsers().add(admin);
+    }
+
+    public List<Authority> getAut(){
+        return authorityRepository.findAll();
     }
 
      public List<User> getAllUsers() {
@@ -67,7 +78,7 @@ public class Service {
             throw new RuntimeException("User already exists");
         } else {
             User user = new User(name, username, password);
-            user.setAuthority(authorityRepository.findByAuthorityType(AuthorityTypes.valueOf("ROLE_USER")));
+            user.setAuthority(authorityRepository.findByAuthority("ROLE_USER"));
             userRepository.save(user);
         }
     }

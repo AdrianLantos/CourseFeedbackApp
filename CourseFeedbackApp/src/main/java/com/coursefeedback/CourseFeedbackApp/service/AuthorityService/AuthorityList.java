@@ -1,6 +1,7 @@
 package com.coursefeedback.CourseFeedbackApp.service.AuthorityService;
 
 import com.coursefeedback.CourseFeedbackApp.model.user.Authority;
+import com.coursefeedback.CourseFeedbackApp.service.userService.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Component
 public class AuthorityList implements AuthorityMemoryProvider{
+
     private List<Authority> authorityList = setAuthorities();
 
     public List<Authority> setAuthorities(){
