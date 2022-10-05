@@ -1,6 +1,5 @@
 package com.coursefeedback.CourseFeedbackApp.service.AuthorityService;
 
-import com.coursefeedback.CourseFeedbackApp.model.user.Authority;
 import java.util.List;
 
 

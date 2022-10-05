@@ -21,21 +21,13 @@ public class User {
     private Integer id;
     @Column
     private String name;
-    @Column
-    private String username;
-    @Column
-    private String password;
     @ManyToMany
     private List<Course> courses = new ArrayList<>();
     @OneToMany
     private List<Feedback> feedbacks = new ArrayList<>();
-    @ManyToOne
-    private Authority authority;
 
-    public User (String name, String username, String password){
-        this.username = username;
+    public User (String name){
         this.name = name;
-        this.password = password;
     }
 
 }

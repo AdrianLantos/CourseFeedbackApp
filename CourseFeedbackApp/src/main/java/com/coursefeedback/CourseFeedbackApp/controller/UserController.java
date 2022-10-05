@@ -2,7 +2,6 @@ package com.coursefeedback.CourseFeedbackApp.controller;
 
 import com.coursefeedback.CourseFeedbackApp.model.course.Course;
 import com.coursefeedback.CourseFeedbackApp.model.feedback.Feedback;
-import com.coursefeedback.CourseFeedbackApp.model.user.Authority;
 import com.coursefeedback.CourseFeedbackApp.service.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +16,6 @@ public class UserController {
     public UserController(Service service) {
         this.service = service;
     }
-
-    @GetMapping("/aut")
-    public List<Authority> authorityList(){
-        return service.getAut();
-    }
-
     @GetMapping("/{userId}/feedback")
     public List<Feedback> getUserFeedback(@PathVariable Integer userId){
         return service.getUserFeedback(userId);

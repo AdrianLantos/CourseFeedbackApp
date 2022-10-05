@@ -40,7 +40,7 @@ public class AdminController {
     public void createUser(@RequestParam(required = false) String name,
                            @RequestParam(required = false) String username,
                            @RequestParam(required = false) String password){
-        service.createUser(name, username, password);
+        service.createUser(name);
     }
 
     @PutMapping("/courses/{courseId}/users/{userId}")

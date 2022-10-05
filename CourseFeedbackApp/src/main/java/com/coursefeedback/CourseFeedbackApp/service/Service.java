@@ -2,7 +2,6 @@ package com.coursefeedback.CourseFeedbackApp.service;
 
 import com.coursefeedback.CourseFeedbackApp.model.course.Course;
 import com.coursefeedback.CourseFeedbackApp.model.feedback.Feedback;
-import com.coursefeedback.CourseFeedbackApp.model.user.Authority;
 import com.coursefeedback.CourseFeedbackApp.model.user.User;
 import com.coursefeedback.CourseFeedbackApp.service.AuthorityService.AuthorityMemoryProvider;
 import com.coursefeedback.CourseFeedbackApp.service.AuthorityService.AuthorityRepository;
@@ -40,18 +39,8 @@ public class Service {
         userRepository.saveAll(memoryProvider.getUsers());
         courseRepository.saveAll(courseMemoryProvider.getCourses());
         authorityRepository.saveAll(authorityMemoryProvider.getAuthorityList());
-        createAdmin();
     }
 
-    public void createAdmin() {
-        User admin = new User("admin", "admin", "admin");
-        admin.setAuthority(authorityRepository.findById(1).get());
-        authorityRepository.findById(1).orElseThrow(() -> new RuntimeException("WRONG AUTHORITY")).getUsers().add(admin);
-    }
-
-    public List<Authority> getAut(){
-        return authorityRepository.findAll();
-    }
 
      public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -72,13 +61,12 @@ public class Service {
         courseRepository.save(course);
     }
 
-    public void createUser(String name, String username, String password) {
-        if (userRepository.findAll().stream().map(User::getUsername).toList().contains(username)) {
+    public void createUser(String name) {
+        if (userRepository.findAll().stream().map(User::getName).toList().contains(name)) {
             System.err.println("User already exists");
             throw new RuntimeException("User already exists");
         } else {
-            User user = new User(name, username, password);
-            user.setAuthority(authorityRepository.findByAuthority("ROLE_USER"));
+            User user = new User(name);
             userRepository.save(user);
         }
     }

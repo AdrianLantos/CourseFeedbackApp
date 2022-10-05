@@ -1,10 +1,7 @@
 package com.coursefeedback.CourseFeedbackApp.service.AuthorityService;
 
-import com.coursefeedback.CourseFeedbackApp.model.user.Authority;
-import com.coursefeedback.CourseFeedbackApp.service.userService.UserRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
