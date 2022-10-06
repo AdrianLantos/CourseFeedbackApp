@@ -2,6 +2,7 @@ package com.coursefeedback.CourseFeedbackApp.model.feedback;
 
 import com.coursefeedback.CourseFeedbackApp.model.course.Course;
 import com.coursefeedback.CourseFeedbackApp.model.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,8 +22,10 @@ public class Feedback {
     @Column
     private String body;
     @ManyToOne(optional = false)
+    @JsonIgnore
     private Course course;
     @ManyToOne(optional = false)
+    @JsonIgnore
     private User user;
 
 }

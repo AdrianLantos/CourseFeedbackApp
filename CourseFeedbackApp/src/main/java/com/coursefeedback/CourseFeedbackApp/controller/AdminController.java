@@ -37,9 +37,7 @@ public class AdminController {
     }
 
     @PutMapping("/users/addUser")
-    public void createUser(@RequestParam(required = false) String name,
-                           @RequestParam(required = false) String username,
-                           @RequestParam(required = false) String password){
+    public void createUser(@RequestParam(required = false) String name){
         service.createUser(name);
     }
 

@@ -3,8 +3,6 @@ package com.coursefeedback.CourseFeedbackApp.service;
 import com.coursefeedback.CourseFeedbackApp.model.course.Course;
 import com.coursefeedback.CourseFeedbackApp.model.feedback.Feedback;
 import com.coursefeedback.CourseFeedbackApp.model.user.User;
-import com.coursefeedback.CourseFeedbackApp.service.AuthorityService.AuthorityMemoryProvider;
-import com.coursefeedback.CourseFeedbackApp.service.AuthorityService.AuthorityRepository;
 import com.coursefeedback.CourseFeedbackApp.service.courseService.CourseMemoryProvider;
 import com.coursefeedback.CourseFeedbackApp.service.courseService.CourseRepository;
 import com.coursefeedback.CourseFeedbackApp.service.feedbackService.FeedbackMemoryProvider;
@@ -20,25 +18,21 @@ public class Service {
     private final UserRepository userRepository;
     private final FeedbackRepository feedbackRepository;
     private final CourseRepository courseRepository;
-    private final AuthorityRepository authorityRepository;
 
     public Service(FeedbackMemoryProvider feedbackMemoryProvider,
                    UserMemoryProvider memoryProvider,
                    CourseRepository courseRepository,
                    UserRepository userRepository,
                    FeedbackRepository feedbackRepository,
-                   CourseMemoryProvider courseMemoryProvider,
-                   AuthorityRepository authorityRepository,
-                   AuthorityMemoryProvider authorityMemoryProvider) {
+                   CourseMemoryProvider courseMemoryProvider
+                   ) {
         this.userRepository = userRepository;
         this.feedbackRepository = feedbackRepository;
         this.courseRepository = courseRepository;
-        this.authorityRepository = authorityRepository;
 
-        feedbackRepository.saveAll(feedbackMemoryProvider.getFeedback());
-        userRepository.saveAll(memoryProvider.getUsers());
-        courseRepository.saveAll(courseMemoryProvider.getCourses());
-        authorityRepository.saveAll(authorityMemoryProvider.getAuthorityList());
+        this.feedbackRepository.saveAll(feedbackMemoryProvider.getFeedback());
+        this.userRepository.saveAll(memoryProvider.getUsers());
+        this.courseRepository.saveAll(courseMemoryProvider.getCourses());
     }
 
 
