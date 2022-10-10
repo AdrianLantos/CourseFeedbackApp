@@ -25,7 +25,7 @@ public class Service {
                    UserRepository userRepository,
                    FeedbackRepository feedbackRepository,
                    CourseMemoryProvider courseMemoryProvider
-                   ) {
+    ) {
         this.userRepository = userRepository;
         this.feedbackRepository = feedbackRepository;
         this.courseRepository = courseRepository;
@@ -36,7 +36,7 @@ public class Service {
     }
 
 
-     public List<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -66,17 +66,20 @@ public class Service {
     }
 
     public void enrollUser(Integer courseId, Integer userId) {
-        courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not Found"))
-                .getUsers()
-                .add(userRepository.findById(userId)
-                        .orElseThrow(() -> new RuntimeException("User not found")));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not Found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        course.addUser(user);
+        courseRepository.save(course);
     }
 
     public List<Feedback> getFeedbackForCourse(Integer courseId) {
         return feedbackRepository.findAll()
                 .stream()
-                .filter(feedback -> courseRepository.findById(courseId).orElseThrow(()-> new RuntimeException("No matching Course"))
+                .filter(feedback -> courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("No matching Course"))
                         .getFeedbackList()
                         .contains(feedback.getCourse()))
                 .toList();
@@ -90,8 +93,8 @@ public class Service {
         return userRepository.findById(userId)
                 .stream()
                 .map(User::getCourses)
-                .findAny()
-                .orElse(List.of());
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No courses found"));
     }
 
     public List<Feedback> getUserFeedback(Integer userId) {
@@ -111,23 +114,23 @@ public class Service {
 
     public void editFeedback(Integer userId, Feedback newFeedback, Integer feedbackId) {
         Feedback editedFeedback = feedbackRepository.findById(feedbackId).orElseThrow(() -> new RuntimeException("Feedback does not exist"));
-        if(!editedFeedback.getUser().equals(userRepository.findById(userId))){
-           throw new RuntimeException("Can only edit your own feedback");
+        if (!editedFeedback.getAuthor().equals(userRepository.findById(userId))) {
+            throw new RuntimeException("Can only edit your own feedback");
         }
         editedFeedback.setBody(newFeedback.getBody());
         editedFeedback.setTitle(newFeedback.getTitle());
         feedbackRepository.save(editedFeedback);
     }
 
-    public void deleteUserFeedback(Integer feedbackId, Integer userId){
-       if(feedbackRepository.findAll().stream()
+    public void deleteUserFeedback(Integer feedbackId, Integer userId) {
+        if (feedbackRepository.findAll().stream()
                 .filter(feedback -> feedback.getId().equals(feedbackId))
-                .map(Feedback::getUser)
+                .map(Feedback::getAuthor)
                 .map(User::getId)
-                .findAny().orElseThrow(()-> new RuntimeException("Feedback does not exist for given user"))
-                .equals(userId)){
-           feedbackRepository.deleteById(feedbackId);
-       }
+                .findAny().orElseThrow(() -> new RuntimeException("Feedback does not exist for given user"))
+                .equals(userId)) {
+            feedbackRepository.deleteById(feedbackId);
+        }
     }
 
 }

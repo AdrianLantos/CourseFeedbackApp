@@ -22,10 +22,12 @@ public class Feedback {
     @Column
     private String body;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "course_id")
     @JsonIgnore
     private Course course;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
     @JsonIgnore
-    private User user;
+    private User author;
 
 }

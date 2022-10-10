@@ -21,14 +21,17 @@ public class User {
     private Integer id;
     @Column
     private String name;
-    @ManyToMany
+    @ManyToMany(mappedBy = "usersEnrolled")
     private List<Course> courses = new ArrayList<>();
-    @OneToMany
+    @OneToMany(mappedBy = "author")
     private List<Feedback> feedbacks = new ArrayList<>();
 
     public User (String name){
         this.name = name;
     }
 
+    public void addCourse(Course course){
+        courses.add(course);
+    }
 }
 
