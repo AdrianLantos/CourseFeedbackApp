@@ -10,6 +10,7 @@ import com.coursefeedback.CourseFeedbackApp.service.feedbackService.FeedbackRepo
 import com.coursefeedback.CourseFeedbackApp.service.userService.UserMemoryProvider;
 import com.coursefeedback.CourseFeedbackApp.service.userService.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -71,9 +72,12 @@ public class Service {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        course.addUser(user);
-        courseRepository.save(course);
+        if (user.getCourses().contains(course)) {
+            throw new RuntimeException("User is already enrolled");
+        } else {
+            course.addUser(user);
+            courseRepository.save(course);
+        }
     }
 
     public List<Feedback> getFeedbackForCourse(Integer courseId) {
@@ -86,7 +90,8 @@ public class Service {
     }
 
     public void deleteFeedback(Integer feedbackId) {
-        feedbackRepository.deleteById(feedbackId);
+        Feedback deletedFeedback = feedbackRepository.findById(feedbackId).orElseThrow(() -> {throw new RuntimeException("No Feedback Found");});
+        feedbackRepository.delete(deletedFeedback);
     }
 
     public List<Course> getUserCourses(Integer userId) {
@@ -107,30 +112,27 @@ public class Service {
 
     public void postFeedback(Integer userId, Integer courseId, Feedback feedback) {
         feedback.setCourse(courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("User nor found")));
-        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"))
-                .getFeedbacks().add(feedback);
+        feedback.setAuthor(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
         feedbackRepository.save(feedback);
     }
 
-    public void editFeedback(Integer userId, Feedback newFeedback, Integer feedbackId) {
-        Feedback editedFeedback = feedbackRepository.findById(feedbackId).orElseThrow(() -> new RuntimeException("Feedback does not exist"));
-        if (!editedFeedback.getAuthor().equals(userRepository.findById(userId))) {
-            throw new RuntimeException("Can only edit your own feedback");
-        }
-        editedFeedback.setBody(newFeedback.getBody());
-        editedFeedback.setTitle(newFeedback.getTitle());
-        feedbackRepository.save(editedFeedback);
+    public void editFeedback(Integer userId, Feedback feedback, Integer feedbackId) {
+        feedback.setId(feedbackId);
+        feedback.setCourse(feedbackRepository.findById(feedbackId).orElseThrow(() -> new RuntimeException("User nor found")).getCourse());
+        feedback.setAuthor(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
+        feedbackRepository.save(feedback);
     }
 
-    public void deleteUserFeedback(Integer feedbackId, Integer userId) {
-        if (feedbackRepository.findAll().stream()
-                .filter(feedback -> feedback.getId().equals(feedbackId))
-                .map(Feedback::getAuthor)
-                .map(User::getId)
-                .findAny().orElseThrow(() -> new RuntimeException("Feedback does not exist for given user"))
-                .equals(userId)) {
-            feedbackRepository.deleteById(feedbackId);
+    public List<Feedback> userFeedbackForCourse(Integer userId, Integer courseId) {
+        List<Feedback> userFeedbackList = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found")).getFeedbacks();
+        List<Feedback> courseFeedbackList = courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course Not Found")).getFeedbackList();
+        List<Feedback> result  =  new ArrayList<>();
+        for (Feedback feedback : courseFeedbackList) {
+            if (userFeedbackList.contains(feedback)) {
+                result.add(feedback);
+            }
         }
+        return result;
     }
 
 }
