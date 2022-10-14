@@ -30,8 +30,5 @@ public class User {
         this.name = name;
     }
 
-    public void addCourse(Course course){
-        courses.add(course);
-    }
 }
 

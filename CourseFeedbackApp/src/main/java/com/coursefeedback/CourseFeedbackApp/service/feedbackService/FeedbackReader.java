@@ -9,7 +9,6 @@ import java.util.List;
 public class FeedbackReader implements FeedbackMemoryProvider{
     private List<Feedback> feedbackList =new ArrayList<>();
 
-
         @Override
     public List<Feedback> getFeedback() {
         return feedbackList;
