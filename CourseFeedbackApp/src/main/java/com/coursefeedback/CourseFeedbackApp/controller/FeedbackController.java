@@ -34,7 +34,7 @@ public class FeedbackController {
         service.deleteFeedback(feedbackId);
     }
 
-    @GetMapping("/{courseId}/user/{userId}")
+    @GetMapping("/course/{courseId}/user/{userId}")
     public List<Feedback> getUserFeedbackForCourse(@PathVariable Integer userId,
                                                    @PathVariable Integer courseId) {
         return service.getUserFeedbackForCourse(userId, courseId);

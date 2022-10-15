@@ -25,7 +25,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}/courses")
     public List<Course> getUserCourses(@PathVariable Integer userId) {
         return userService.getUserCourses(userId);
     }
